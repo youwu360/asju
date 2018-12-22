@@ -1,24 +1,3 @@
-import cv2
-import numpy as np
-import random
-
-img_cnt = 10
-idx = 0
-
-cap = cv2.VideoCapture("videos/haokan.mp4")
-while cap.isOpened():
-    ret, frame = cap.read()
-    if ret:
-        idx += 1
-
-        if random.random() <= img_cnt / idx:
-            v = random.randint(0, 100) % 10
-            cv2.imwrite("images/fotolia_processed/%d.jpg" % v, frame)
-    else:
-        break
-
-cap.release()
-cv2.destroyAllWindows()
 
 from src import *
 
@@ -29,7 +8,7 @@ cropped_gx, cropped_gy = crop_watermark(gx, gy)
 W_m = poisson_reconstruct(cropped_gx, cropped_gy)
 
 # random photo
-img = cv2.imread('images/fotolia_processed/2.jpg')
+img = cv2.imread('images/test/2.jpg')
 im, start, end = watermark_detector(img, cropped_gx, cropped_gy)
 
 # plt.imshow(im)
