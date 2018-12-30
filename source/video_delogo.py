@@ -11,13 +11,17 @@ path = base.joinpath('videos/' + file_name)
 frames = video_action.get_all_frames(str(path))
 
 
-template = cv2.imread(str(base.joinpath('logos/haokan3.jpg')))
+template = cv2.imread(str(base.joinpath('logos/haokan5.jpg')))
+
+cv2.imshow('template', template)
+cv2.waitKey(0)
+
 shape = template.shape
 
 indicator = np.ones((shape[0], shape[1]))
 for i in range(shape[0]):
     for j in range(shape[1]):
-        if np.sum(template[i][j]) != 0:
+        if np.sum(template[i][j]) >= 10:
             indicator[i][j] = 0
 
 indicators = np.repeat(indicator[:, :, np.newaxis], 3, axis=2)
@@ -43,9 +47,11 @@ y = int(np.median(y_list))
 
 print(x, y)
 
+new_logo = cv2.imread(str(base.joinpath('logos/haokan5_meitu_2.jpg')))
+
 for frame in frames:
-    frame[y:y + shape[0], x:x + shape[1]] = frame[y:y + shape[0], x:x + shape[1]] * indicators
+    frame[y:y + shape[0], x:x + shape[1]] = new_logo
     cv2.imshow("frame", frame)
-    cv2.waitKey(0)
+    cv2.waitKey(1000)
 
 
