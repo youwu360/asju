@@ -3,6 +3,7 @@ import numpy as np
 
 
 def detect(imgs):
+    shape = imgs[0].shape
     arr = np.array(imgs)
     var = np.array(np.array(np.sqrt(np.var(arr, 0))).astype(int), dtype=np.uint8)
 
@@ -33,6 +34,6 @@ def detect(imgs):
     y2 = int(np.quantile(y_list, r))
     y98 = int(np.quantile(y_list, 1 - r))
 
-    compact = np.array(logo[y2:y98, x2:x98], dtype=np.uint8)
+    compact = np.array(logo[max(0, y2 - 2):min(shape[0], y98 + 2), max(0, x2 - 2):min(shape[1], x98 + 2)], dtype=np.uint8)
     return compact
 

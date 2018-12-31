@@ -12,10 +12,6 @@ frames = video_action.get_all_frames(str(path))
 
 
 template = cv2.imread(str(base.joinpath('logos/haokan5.jpg')))
-
-cv2.imshow('template', template)
-cv2.waitKey(0)
-
 shape = template.shape
 
 indicator = np.ones((shape[0], shape[1]))
@@ -50,8 +46,31 @@ print(x, y)
 new_logo = cv2.imread(str(base.joinpath('logos/haokan5_meitu_2.jpg')))
 
 for frame in frames:
-    frame[y:y + shape[0], x:x + shape[1]] = new_logo
+    logo_area = frame[y:y + shape[0], x:x + shape[1], :]
+    logo_area = logo_area - template
+    print('logo_area.shape')
+    print(logo_area.shape)
+    # cv2.imshow("logo_area", logo_area)
+    # cv2.waitKey(500)
+
+    blured = cv2.blur(logo_area, (9, 9))
+
+    # cv2.imshow("logo_area, blured", logo_area)
+    # cv2.waitKey(500)
+
+    # cv2.imshow("new_logo", new_logo)
+    # cv2.waitKey(500)
+
+    print('new_logo.shape')
+    print(new_logo.shape)
+
+    alpha = 0.5
+    comp_logo = cv2.addWeighted(blured, alpha, new_logo, 1 - alpha, 0)
+    # cv2.imshow("comp_logo", comp_logo)
+    # cv2.waitKey(500)
+
+    frame[y:y + shape[0], x:x + shape[1]] = comp_logo
     cv2.imshow("frame", frame)
-    cv2.waitKey(1000)
+    cv2.waitKey(0)
 
 
