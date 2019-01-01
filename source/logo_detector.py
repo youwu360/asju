@@ -53,18 +53,26 @@ def merge_region(regions):
     ret = []
     ret.append(regions[0])
     for i in range(1, len(regions)):
-        [[y0, x0], [y1, x1]] = ret[-1]
-        [[Y0, X0], [Y1, X1]] = regions[i]
+        y0 = ret[-1][0][0]
+        x0 = ret[-1][0][1]
+        y1 = ret[-1][1][0]
+        x1 = ret[-1][1][1]
+
+        Y0 = regions[i][0][0]
+        X0 = regions[i][0][1]
+        Y1 = regions[i][1][0]
+        X1 = regions[i][1][1]
 
         ny0 = min(y0, Y0)
         nx0 = min(x0, X0)
         ny1 = max(y1, Y1)
         nx1 = max(x1, X1)
+
         area0 = (y1 - y0 + 1) * (x1 - x0 + 1)
         area1 = (Y1 - Y0 + 1) * (X1 - X0 + 1)
         area_new = (ny1 - ny0 + 1) * (nx1 - nx0 + 1)
 
-        print("ratio: %s " % (area0 + area1) / area_new)
+        print("ratio: %f " % (area0 + area1) / area_new)
 
     return ret
 
