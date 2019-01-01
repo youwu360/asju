@@ -6,12 +6,12 @@ import numpy as np
 
 
 base = Path(__file__).resolve().parents[1]
-file_name = 'haokan6.mp4'
-path = base.joinpath('videos/' + file_name)
+file_name = '1.mp4'
+path = base.joinpath('youku/' + file_name)
 frames = video_action.get_all_frames(str(path))
 
 
-template = cv2.imread(str(base.joinpath('logos/haokan5.jpg')))
+template = cv2.imread(str(base.joinpath('logos/2.jpg')))
 shape = template.shape
 
 indicator = np.ones((shape[0], shape[1]))
@@ -43,7 +43,7 @@ y = int(np.median(y_list))
 
 print(x, y)
 
-new_logo = cv2.imread(str(base.joinpath('logos/haokan5_meitu_2.jpg')))
+new_logo = cv2.imread(str(base.joinpath('logos/2_meitu_1.jpg')))
 
 for frame in frames:
     logo_area = frame[y:y + shape[0], x:x + shape[1], :]
