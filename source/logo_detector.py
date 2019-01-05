@@ -34,21 +34,27 @@ def has_logo(imgs):
         rectangle.clear()
         for y in range(y0_y1[0], y0_y1[1] + 1):
             for x in range(shape[1]):
-                if zero_one[y][x] != 0:
+                if 0 < x < shape[1] - 1 and 0 < y < shape[0] - 1 and np.sum(zero_one[y - 1:y + 2, x - 1:x + 2]) >= 5:
                     rectangle.add_point([y, x])
 
         regions.append(rectangle.get_region())
 
-    merged_regions = merge_region(regions)
+    merged_regions = merge_rectangle_region(regions)
 
-    for [[y0, x0], [y1, x1]] in merged_regions:
-        if y0 < y1 and x0 < x1 and (x1 - x0 + 1) / (y1 - y0 + 1) > 1.68:
-            return True
+    if merged_regions is not None:
+        for [[y0, x0], [y1, x1]] in merged_regions:
+            lx = x1 - x0 + 1
+            ly = y1 - y0 + 1
+            if y0 < y1 and x0 < x1 and lx / ly > 1.68 and 0.1 < lx / shape[1] < 0.5 and 0.025 < ly / shape[0] < 0.1:
+                return True
 
     return False
 
 
-def merge_region(regions):
+def merge_rectangle_region(regions):
+
+    if regions is None or len(regions) <= 1:
+        return regions
 
     ret = []
     ret.append(regions[0])
@@ -72,7 +78,16 @@ def merge_region(regions):
         area1 = (Y1 - Y0 + 1) * (X1 - X0 + 1)
         area_new = (ny1 - ny0 + 1) * (nx1 - nx0 + 1)
 
-        print("ratio: %f " % (area0 + area1) / area_new)
+        ratio = (area0 + area1) / area_new
+        print("ratio: %f " % ratio)
+
+        if ratio >= 2/3:
+            merged = lib.RectangleRegion.RectangleRegion()
+            merged.add_points(ret[-1])
+            merged.add_points(regions[i])
+            ret[-1] = merged.get_region()
+        else:
+            ret.append(regions[i])
 
     return ret
 
@@ -83,7 +98,7 @@ def get_zero_one(imgs):
 
     grey_img = cv2.cvtColor(var, cv2.COLOR_BGR2GRAY)
     _, bin_img = cv2.threshold(grey_img, 30, 255, cv2.THRESH_BINARY_INV)
-    dilate_img = cv2.dilate(bin_img, (3, 3))
+    dilate_img = cv2.dilate(bin_img, kernel=(3, 3), borderType=cv2.BORDER_ISOLATED)
     cv2.imshow('dilate_img', dilate_img)
     cv2.waitKey(0)
 

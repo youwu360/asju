@@ -12,7 +12,16 @@ class RectangleRegion:
     def add_point(self, point):
         self.points.append(list(point))
 
+    def add_points(self, points):
+        for point in points:
+            self.add_point(point)
+
     def get_region(self):
+
+        if len(self.points) < 2:
+            print("error in get_region !")
+            return None
+
         y0 = np.min([point[0] for point in self.points])
         y1 = np.max([point[0] for point in self.points])
         x0 = np.min([point[1] for point in self.points])
